@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+  <link rel="stylesheet" href="wts1.css" />
+  <link rel="icon" type="image/x-icon" href="Logo_last.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playwrite+MX:wght@100..400&display=swap"
+    rel="stylesheet"
+  />
+  <title>Activity_3</title>
+  <style>
+    .options-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 10px;
+      margin-top: 30px;
+      flex-direction: row; /* Make sure images are in a single row */
+    }
+
+    .option {
+      display: flex; /* Change from block to flex */
+  justify-content: center; /* Center images within their containers */
+  align-items: center; /* Align items vertically */
+  width: auto; /* Remove fixed width for flexible sizing */
+  margin: 0 10px; /* Add some margin for spacing */
+  cursor: pointer;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5vw;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  text-align: center;
+    }
+
+    .option-img {
+      height: auto;
+      border-radius: 5px;
+      width: 100%;
+      margin: 3% 0%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    .option-img:hover {
+      border-color: #0056b3;
+    }
+
+    .imgdiv {
+      position: relative;
+    }
+
+    .question {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      color: black;
+      font-size: 1.5rem;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    .smallbtn.active,
+    .smallbtn.default {
+      background-color: #f56c6c;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <audio id="cheers" src="cheers.mp3"></audio>
+  <audio id="points" src="Points.mp3"></audio>
+  <audio id="fail" src="fail.mp3"></audio>
+  <div
+    class="header"
+    style="
+      width: auto;
+      box-shadow: 5px 5px 10px rgb(0, 0, 0);
+      padding-bottom: 10px;
+    "
+  >
+    <img
+      src="Logo.png"
+      width="5%"
+      style="float: left; margin-top: 25px; text-align: left"
+      class="img-responsive"
+    />
+    <span>
+      <img
+        src="header.png"
+        width="30%"
+        height=""
+        class="img-responsive"
+        style="text-align: left"
+      />
+    </span>
+  </div>
+  <br />
+  <center>
+    <h1 id="heading">Addition and Subtraction </h1>
+    <div id="questionButtons" class="container">
+      <!-- Dynamic buttons will be inserted here -->
+    </div>
+    <div class="maindiv container d-flex">
+      
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 imgdiv">
+        <div id="question" class="question"></div>
+        <img
+          id="math_ques"
+          src="question_img1.jpg"
+          width="100%"
+          height="100%"
+        />
+      </div>
+
+      <div id="questiondiv" class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+        <div class="options" id="options">
+          <!-- Options will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+    <div class="container d-flex mt-4 mb-2">
+      <div class="btnContainer col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
+        <button
+          id="nextbtn"
+          class="btn btn-lg btn-primary"
+          onclick="newques()"
+        >
+          Next
+        </button>
+      </div>
+      <div class="messageContainer col-lg-6 col-md-6 col-sm-6 col-xs-6 mt-2">
+        <p id="message" class="message"></p>
+      </div>
+    </div>
+
+    <script>
+      let questions; // Variable to hold loaded questions data
+      let currentQuestion = 0;
+      let currentImage = 0;
+      const audioCache = {};
+
+
+      // Function to fetch questions from JSON file
+      async function fetchQuestions() {
+        try {
+          const response = await fetch('question_images.json'); // Fetch the JSON file
+          if (!response.ok) {
+            throw new Error('Failed to load questions');
+          }
+          questions = await response.json(); // Parse JSON response
+          preloadAudio(); // Preload audio files
+        } catch (error) {
+          console.error('Error loading questions:', error);
+        }
+      }
+
+      function preloadAudio() {
+        questions.forEach(question => {
+          question.optionsAudio.forEach(audioUrl => {
+            if (!audioCache[audioUrl]) {
+              const audio = new Audio(audioUrl);
+              audioCache[audioUrl] = audio;
+            }
+          });
+        });
+      }
+
+      function loadQuestion() {
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const messageElement = document.getElementById('message');
+        // const questionNumber = document.getElementById('numdiv');
+        const questionImage = document.getElementById('math_ques');
+
+        const current = questions[currentQuestion];
+
+        // questionNumber.innerHTML = current.questionNo;
+        questionElement.innerHTML = current.question;
+
+        optionsElement.innerHTML = '';
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.classList.add('options-container');
+        
+        current.optionsImages.forEach((optionImage, index) => {
+  const optionDiv = document.createElement('div');
+  optionDiv.classList.add('option');
+
+  const optionImg = document.createElement('img');
+  optionImg.classList.add('option-img');
+  optionImg.src = optionImage;
+  optionImg.alt = `Option ${index + 1}`;
+  optionImg.style.cursor = 'pointer';
+  optionImg.setAttribute('data-audio', current.optionsAudio[index]);
+  optionImg.addEventListener('mouseover', handleMouseOver);
+  optionImg.addEventListener('mouseout', handleMouseOut);
+  optionImg.onclick = () => checkAnswer(index);
+
+  optionDiv.appendChild(optionImg);
+  optionsContainer.appendChild(optionDiv);
+});
+
+// Append the single container to optionsElement
+optionsElement.innerHTML = ''; // Clear previous options
+optionsElement.appendChild(optionsContainer);
+
+        messageElement.innerHTML = '';
+        document.getElementById('nextbtn').style.display = 'none';
+      }
+
+      function handleMouseOver(event) {
+        const audioFile = event.target.getAttribute('data-audio');
+        if (audioFile && audioCache[audioFile]) {
+          audioCache[audioFile].play();
+        }
+      }
+
+      function handleMouseOut(event) {
+        const audioFile = event.target.getAttribute('data-audio');
+        if (audioFile && audioCache[audioFile]) {
+          audioCache[audioFile].pause();
+          audioCache[audioFile].currentTime = 0; // Reset audio to start
+        }
+      }
+
+      // Function to check selected answer
+      function checkAnswer(selected) {
+        const current = questions[currentQuestion];
+        const messageElement = document.getElementById('message');
+        if (selected === current.correct) {
+          messageElement.innerHTML = "Good Job! <div class='flip'>&#128512</div>";
+          document.getElementById('points').play();
+          document.getElementById('nextbtn').style.display = 'inline-block';
+        } else {
+          messageElement.innerHTML = 'Try Again! <div class="flip">😎</div>';
+          document.getElementById('fail').play();
+          document.getElementById('nextbtn').style.display = 'none';
+        }
+      }
+
+      // Function to load next question
+      function newques() {
+        if (currentQuestion === questions.length - 1) {
+          document.getElementById('heading').innerHTML = '';
+          document.getElementById('math_ques').src = "last.jpg";
+          document.getElementById('question').innerHTML = '';
+          document.getElementById('options').innerHTML = "";
+          document.getElementById('cheers').play();
+          document.getElementById('message').innerHTML = '';
+          document.getElementById('nextbtn').style.display = 'none';
+          // document.getElementById('numdiv').style.display = 'none';
+          document.querySelectorAll('.smallbtn').forEach(button => button.classList.add('hidden'));
+    
+          const buttons = document.querySelectorAll('.smallbtn');
+          buttons.forEach(button => button.classList.remove('active'));
+        } else {
+          currentQuestion++;
+          currentImage++;
+          loadQuestion();
+
+          // Update active class in question selection buttons
+          const buttons = document.querySelectorAll('.smallbtn');
+          buttons.forEach((button, index) => {
+            if (index === currentQuestion) {
+              button.classList.add('active');
+            } else {
+              button.classList.remove('active');
+            }
+          });
+        }
+      }
+
+      // Function to handle button clicks for specific question
+      function abc(x) {
+        // document.getElementById('numdiv').style.display = 'block';
+        document.getElementById('heading').innerHTML = 'Addition and Subtraction';
+        document.getElementById('math_ques').src = 'question_img1.jpg';
+        currentQuestion = x - 1;
+        currentImage = x - 1;
+        loadQuestion();
+
+        // Remove active class from all buttons
+        const buttons = document.querySelectorAll('.smallbtn');
+        buttons.forEach(button => button.classList.remove('active'));
+
+        // Add active class to the clicked button
+        buttons[x - 1].classList.add('active');
+      }
+
+      // Initialize the quiz when window loads
+      window.onload = async function () {
+        await fetchQuestions(); // Load questions from JSON
+        loadQuestion(); // Display the first question
+
+        // Generate question selection buttons dynamically
+        const questionButtonsContainer = document.getElementById('questionButtons');
+        questions.forEach((_, index) => {
+          const button = document.createElement('button');
+          button.textContent = `Q${index + 8}`;
+          button.classList.add('smallbtn');
+          button.onclick = () => abc(index + 1);
+
+          // Add 'active' class to the first button
+          if (index === 0) {
+            button.classList.add('active');
+          }
+
+          questionButtonsContainer.appendChild(button);
+        });
+      };
+    </script>
+  </center>
+</body>
+</html>

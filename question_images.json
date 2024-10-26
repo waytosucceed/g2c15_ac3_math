@@ -1,0 +1,52 @@
+[
+  {
+    "questionNo": "",
+    "question": "Jenny is calculating how many cups are still available.Which picture shows <BR>8 - 3 = 5?",
+    
+    "optionsImages": [
+      "./images/1.jpg",
+      "./images/2.jpg"
+    ],
+    "correct": 1,
+    "optionsAudio": [
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "questionNo": "",
+    "question": " James is calculating the number of ice-creams available.Which picture shows <BR>7 - 4 = 3?",
+    
+    "optionsImages": [
+      "./images/3.jpg",
+      "./images/4.jpg"
+    ],
+    "correct":0,
+    "optionsAudio": [
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "questionNo": "",
+    "question": "James is counting how many popcorn packets are left after some were taken. Which picture shows<BR> 9 - 5 = 4?",
+    
+    "optionsImages": [
+      "./images/5.jpg",
+      "./images/6.jpg"
+    ],
+    "correct": 1,
+    "optionsAudio": [
+      "",
+      "",
+      "",
+      ""
+    ]
+  }
+      
+  ]
+  

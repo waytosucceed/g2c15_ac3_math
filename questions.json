@@ -1,0 +1,53 @@
+[
+  {
+    "questionNo": 1,
+    "question": "Jenny is counting cookies. Help her by filling in the answer in the empty boxes.",
+    "options":["","+","","=",""],
+    "answers": ["7","+","3","=","10"],
+    "secondImg":"./images/1.png"
+
+  },
+  {
+    "questionNo": 2,
+    "question": "James is counting packets of chips. Fill in the empty box to help him with his calculations.",
+    "options":["","-","","=",""],
+    "answers": ["12","-","4","=","8"],
+    "secondImg":"./images/2.png"
+    
+  },
+  {
+    "questionNo": 3,
+    "question": "Jenny is counting the number of juice boxes. Fill in the empty box to help her.",
+    "options":["","+","","=",""],
+    "answers": ["8","+","5","=","13"],
+    "secondImg":"./images/3.png"
+  },
+  {
+    "questionNo": 4,
+    "question": "James is calculating how many cousins are left to play. Fill in the empty box.",
+    "options":["","-","","=",""],
+    "answers": ["8","-","4","=","4"],
+    "secondImg":"./images/4.png"
+  },
+  {
+    "questionNo": 5,
+    "question": " Jenny is counting how many cupcakes they brought. Fill in the empty box.",
+    "options":["","-","","=",""],
+    "answers": ["11","-","6","=","5"],
+    "secondImg":"./images/5.png"
+  },
+  {
+    "questionNo": 6,
+    "question": "James is calculating  the number of fruits. Fill in the empty box.",
+    "options":["","+","","=",""],
+    "answers": ["12","+","6","=","18"],
+    "secondImg":"./images/6.png"
+  },
+  {
+    "questionNo": 7,
+    "question": "James is calculating the number of balloons that popped. Fill in the empty box.",
+    "options":["","-","","=",""],
+    "answers": ["20","-","8","=","12"],
+    "secondImg":"./images/7.png"
+  }
+]
